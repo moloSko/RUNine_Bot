@@ -1,0 +1,144 @@
+<?php
+
+//$message->guild->members->fetch('memberid')->done(function($member) {$member->addRole('roleid');});
+
+
+/*
+в библиотеке разработчиков
+для удаления и добавления ролей это нормально?
+$message->member->removeRole(549933945140167872);//Outsider
+$message->member->removeRole(908552301480460298);//Imanity
+$message->member->removeRole(667890273939193877);//Speaker
+$message->member->addRole(667322305139040779,"Mmmm 0_0");
+*/
+
+// Добавление роли по id - 
+
+$tsroleadd = $message->member->addRole('978626633458130994');
+$tsrolerem = $message->member->removeRole('978626633458130994');
+
+if(($message->content) == '!Звание'){    
+  $tsroleadd;
+  echo "Добавил", PHP_EOL;
+};
+
+if(($message->content) == '!Разжаловать'){
+  $tsrolerem;
+  echo "Удалил", PHP_EOL;
+};
+
+/*---------------------------*/
+
+//Привет
+//я пытаюсь установить роль пользователя
+                    $message->reply("Спасибо за привязку вашего раздора в игре! Ваши роли были установлены! (".implode(", ", $roles).")");
+                    $m = null;
+                    foreach($guild->members as $member){
+                        if($member->username == $message->author->username){
+                            if($member->username == $message->author->username){
+                                $m = $member;
+                                break 1;
+                            }
+                        }
+                    }
+                    foreach($guild->roles as $r){
+                        if(isset($roles[$r->name])) $m->addRole($r);
+                    }
+                    $guild->members->save($m);
+//Это буквально не имеет никакого эффекта, никогда. Проверено многократно. addRole всегда возвращает true, если у них уже нет роли
+//Но это не может добавить им роли
+//@удаленная-роль
+
+$discord->on('message', function (Message $message, Discord $discord){
+  switch (mb_strtolower($message->content) !== 0){
+    case mb_strtolower($message->content) == '!звание':
+      $message->member->addRole('978626633458130994');
+      echo "Добавил", PHP_EOL;
+    break;
+    case mb_strtolower($message->content) == '!разжаловать':
+      $message->member->removeRole('978626633458130994');
+      echo "Удалил", PHP_EOL;
+    break;
+    case mb_strtolower($message->content) == '!положение':
+      $message->member->removeRole('978626633458130994');
+      echo "Удалил", PHP_EOL;
+    break;
+  }
+});
+
+
+/*---Добавление роли на сервер---*/
+
+$guild = $message->guild;
+$guild->createRole(['name' => 'New Role', 'color' => 0xFF00FF, 'hoist' => true, 'mentionable' => true])->done(function (Role $role) {
+  echo 'Роль создана - ID:', $role->id;
+});
+
+/*---Выдача роли на сервер---*/
+$message->member->addRole('978626633458130994'); // 978626633458130994- её ID
+
+/*---Забрать роли на сервер---*/
+$message->member->removeRole('978626633458130994'); // 978626633458130994- её ID
+
+/*---Ответ на сообщение---*/
+$message->reply('pong');
+
+/*--Запись логи--*/
+//Слушать сообщения(вывод сообщений в логи).
+$discord->on('message', function (Message $message, Discord $discord) {
+  $Week = date('j F Y G:i:s');
+  $new_str = "{$message->guild->name} - {$message->channel->name} - {$Week} - {$message->author->username}: {$message->content}";
+  $filename = __DIR__ . '/logi/log.txt';
+  $fh = fopen($filename, 'c');
+  fseek($fh, 0, SEEK_END); 
+  fwrite($fh, PHP_EOL . $new_str); 
+  fclose($fh);
+});
+
+/*---Поиск в сообщение---*/
+//если вам нужно несколько префиксов, то это
+/*'prefixes' => ['!', '@mention'];
+'prefix' => '!',*/
+
+
+/*------*/
+//Позиционное, регулярное выражение
+$discord->registerCommand('ping', function (Message $message, $params) {
+    if (! $params) {
+        return 'Usage: !ping <user>';
+    }
+
+    if (preg_match('/^<@([0-9]{17,18})>$/', $params[0], $matches)) {
+        $message->guild->members->fetch($matches[1])->done(function (Member $member) use ($message) {
+            $message->reply("Pong {$member}!");
+        });
+    }
+});
+
+
+//Непозиционные, любые упоминания
+$discord->registerCommand('ping', function (Message $message, $params) {
+    if (! $message->mentions) {
+        return 'Usage: !ping <@user>';
+    }
+
+    if ($user = $message->mentions->first()) {
+        $message->reply("Pong {$user}!");
+    }
+});
+
+
+/*--------Вызов id роли--------*/
+
+/*
+  $roleid = array ('978626633458130994','968198654978580550');
+  print_r($roleid);
+
+  /---------В массиве записаны id ролей Вызов массива по его #------------/
+
+  $roleid = array ('978626633458130994','968198654978580550');
+  print_r($roleid[0]);
+
+  $roleid = array ('Тест роль','Тестер');
+  print_r($roleid[0]);
+*/
