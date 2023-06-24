@@ -2493,7 +2493,7 @@ $discord->listenCommand('отряд_2', function (Interaction $interaction) use 
                     if ($Checktg['pDiscord'] == '0'){
                       if ($Checktg['pLvlSort'] == NULL){
                         if($action == 'invt_squad'){
-                          if ($Checktg['pUnits'] == '0'){
+                          if ($Checktg['pUnits'] != '1'){
                             R::exec("UPDATE players set `pUnits` = '$idSquad'  WHERE `pUID` = $targetuser");
                             $otradEmbed = new Embed($discord);
                             $otradEmbed->setColor('#1d9a32');
