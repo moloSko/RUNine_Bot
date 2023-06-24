@@ -2614,10 +2614,10 @@ $discord->listenCommand('участники_отряда', function (Interaction
         foreach($checkuseds as $checkused){
           $Unit = $checkused['pUnits'];
           if (!in_array($Unit, [0,NULL,'<NULL>', '<null>'])){
-            $unitseach = R::getAll("SELECT `pLvl`, `pName`, `pLastTime`, `uUID`, `uTag` FROM players INNER JOIN units ON `pUnits` =`uUID` WHERE `pUnits` = '$Unit' ORDER BY pLastTime DESC");
+            $unitseach = R::getAll("SELECT `pLvl`, `pUID`, `pName`, `pLastTime`, `uUID`, `uTag` FROM players INNER JOIN units ON `pUnits` =`uUID` WHERE `pUnits` = '$Unit' ORDER BY pLastTime DESC");
             foreach ($unitseach as $punit){
               $tagunits = $punit['uTag'];
-              $playeruser[] = "{$namesrole[$punit['pLvl']]} **{$punit['pName']}** - {$punit['pLastTime']}";
+              $playeruser[] = "{$namesrole[$punit['pLvl']]} **{$punit['pName']} ({$punit['pUID']})** - {$punit['pLastTime']}";
             }
             $playername = implode("\n", $playeruser);
             $otradinfo = new Embed($discord);
