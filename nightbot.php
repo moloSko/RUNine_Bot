@@ -2473,6 +2473,88 @@ $discord->listenCommand('отряд', function (Interaction $interaction) use ($
   }
 });
 
+$discord->listenCommand('отряд_2', function (Interaction $interaction) use ($discord, $imgotr){
+  try{
+    $action = $interaction->data->options['действие']->value;
+    $targetuser = $interaction->data->options['steamid']->value;
+    $untauthor = $interaction->member->id;
+    if ($interaction->channel_id == '1069872550210969610'){
+      if(is_numeric($targetuser) and strlen($targetuser) == '17'){
+        $Sechinfos = R::getAll("SELECT * FROM `players` JOIN `units` ON players.pUnits = units.uUID WHERE `DiscID` = '$untauthor'");
+        if (!empty($Sechinfos)){
+          foreach ($Sechinfos as $Sechinfo){
+            $idSquad = $Sechinfo['uUID'];
+            $roleID = $Sechinfo['dRoleID'];
+            if ($Sechinfo['DiscID'] == $Sechinfo['dLeadID'] OR $Sechinfo['DiscID'] == $Sechinfo['dViceID']){
+              if($Sechinfo['pUID'] != $targetuser){
+                $Checktgs = R::getAll("SELECT * FROM `players` LEFT JOIN `stats` ON players.pUID = stats.pUID WHERE players.pUID = '$targetuser'");
+                if (!empty($Checktgs)){
+                  foreach ($Checktgs as $Checktg){
+                    if ($Checktg['pDiscord'] == '0'){
+                      if ($Checktg['pLvlSort'] == NULL){
+                        if($action == 'invt_squad'){
+                          if ($Checktg['pUnits'] == '0'){
+                            R::exec("UPDATE players set `pUnits` = '$idSquad'  WHERE `pUID` = $targetuser");
+                            $otradEmbed = new Embed($discord);
+                            $otradEmbed->setColor('#1d9a32');
+                            if (array_key_exists($idSquad, $imgotr)){
+                              $otradEmbed->setThumbnail($imgotr[$idSquad]);
+                              $otradEmbed->setDescription("ᅠ\nᅠ\n**{$targetuser}** был принят в отряд <@&{$roleID}>!");
+                            }else{
+                              $otradEmbed->setDescription("**{$targetuser}** был принят в отряд <@&{$roleID}>!");
+                            }
+                            $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($otradEmbed));
+                          }else{
+                            $interaction->respondWithMessage(MessageBuilder::new()->setContent("Боец уже состоит в отряде!"), true);
+                          };
+                        }else{
+                          if ($Checktg['pUnits'] != '0'){
+                            R::exec("UPDATE players set `pUnits` = '0'  WHERE `pUID` = $targetuser");
+                            $iotradEmbed = new Embed($discord);
+                            $iotradEmbed->setColor('#ff0000');
+                            if (array_key_exists($idSquad, $imgotr)){
+                              $iotradEmbed->setThumbnail($imgotr[$idSquad]);
+                              $iotradEmbed->setDescription("ᅠ\nᅠ\n**{$targetuser}** был исключен из отряда <@&{$roleID}>!");
+                            }else{
+                              $iotradEmbed->setDescription("**{$targetuser}** был исключен из отряда <@&{$roleID}>!");
+                            }
+                            $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($iotradEmbed));
+                          }else{
+                            $interaction->respondWithMessage(MessageBuilder::new()->setContent("Боец не состоит в отряде!"), true);
+                          };
+                        };
+                      }else{
+                        $interaction->respondWithMessage(MessageBuilder::new()->setContent("Игрок на сервере, в связи с этим мы не можем обновить его статус отряда!"), true);
+                      };
+                    }else{
+                      $interaction->respondWithMessage(MessageBuilder::new()->setContent("Игрок использует привязанный steam аккаунт к discord, воспользуйтесь командой `` /отряд ``!"), true);
+                    };
+                  }
+                }else{
+                  $interaction->respondWithMessage(MessageBuilder::new()->setContent("Введёный вами SteamID не найден!"), true);
+                };
+              }else{
+                $interaction->respondWithMessage(MessageBuilder::new()->setContent("Вы не можете взаимодействовать с самим собой!"), true);
+              };
+            }else{
+              $interaction->respondWithMessage(MessageBuilder::new()->setContent("Вы не являетесь главой или заместителем отряда!"), true);
+            };
+          }
+        }else{
+          $interaction->respondWithMessage(MessageBuilder::new()->setContent("Вы не состоите в отряде!"), true);
+        };
+        R::close();
+      }else{
+        $interaction->respondWithMessage(MessageBuilder::new()->setContent("Проверьте правильно ли введён __steam id__ в поле **[steamid]**!"), true);
+      };
+    }else{
+      $interaction->respondWithMessage(MessageBuilder::new()->setContent("Вам нужен канал <#1069872550210969610>!"), true);
+    };
+  } catch (Exception $e){
+    echo 'Исключение добавление в отряда_2: ',  $e->getMessage(), "\n";
+  }
+});
+
 $discord->listenCommand('регистрация', function (Interaction $interaction) use ($discord){
   try{
     $duserlead = $interaction->member->id;
