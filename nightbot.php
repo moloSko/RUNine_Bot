@@ -1971,6 +1971,25 @@ $discord->listenCommand('привязка', function (Interaction $interaction) 
               $interaction->member->setNickname($result['pName'])->then(function ($add_roless) use ($interaction, $addrole, $result) {
                 $interaction->member->addRole($addrole[$result['pLvl']]);
                 $interaction->member->addRole('959168899671277658');
+                $Idlvluser = $interaction->member->id;
+                $Seachers = R::getAll("SELECT * FROM `discordlvl` WHERE `dID` = $Idlvluser");
+                if (!empty($Seachers)){
+                  foreach ($Seachers as $Seacher){
+                    $lvl = $Seacher['dLvl'];
+                    if ($lvl >= '10' and $lvl < '30'){
+                      $interaction->member->addRole('959088058072973322');
+                    };
+                    if ($lvl >= '30' and $lvl < '70'){
+                      $interaction->member->addRole('957613850407096380');
+                    };
+                    if ($lvl >= '70' and $lvl < '100'){
+                      $interaction->member->addRole('957613522039210014');
+                    };
+                    if ($lvl >= '100'){
+                      $interaction->member->addRole('957613715572818012');
+                    };
+                  }
+                };
                 return true;
               });
               $privateembed = new Embed($discord);
