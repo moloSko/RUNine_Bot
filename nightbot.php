@@ -72,12 +72,6 @@ $discord->on('ready', function (Discord $discord) {
           $info = json_decode($response->getBody());
           $Sname = $info->data->attributes->name;
           $stat = $info->data->attributes->status;
-          $mstat = [
-            "online" => "🟢 Онлайн",
-            "offline" => "🔴 Выключен",
-            "dead" => "🔴 Выключен",
-            "removed" => "🗑️ Удалён",
-          ];
           $mstatt = [
             "online" => "🟢",
             "offline" => "🔴",
@@ -2083,9 +2077,9 @@ $discord->listenCommand('уровень', function (Interaction $interaction) us
           $exp = $userfmexm - $userfexp;
           if ($userid == $autorID) {
             if ($authName != ''){
-              creatlvl($authName, $authhreph, $number, $userflvl, $userfexp, $userfmexm, str_replace('?size=1024', '', $authImg));
+              creatlvl($authName, $authUsername, $number, $userflvl, $userfexp, $userfmexm, str_replace('?size=1024', '', $authImg));
             }else{
-              creatlvl($authUsername, $authhreph, $number, $userflvl, $userfexp, $userfmexm, str_replace('?size=1024', '', $authImg));
+              creatlvl($authUsername, $authUsername, $number, $userflvl, $userfexp, $userfmexm, str_replace('?size=1024', '', $authImg));
             };            
             $interaction->respondWithMessage(MessageBuilder::new()->addFile(__DIR__ . "/Cimges/lvlimage.png", "/Cimges/lvlimage.png"));
           };

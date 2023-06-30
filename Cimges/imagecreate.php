@@ -140,7 +140,9 @@ function creatlvl($nameuser, $hrefuser, $rankuser, $lvluser, $expuser, $max_expu
   }else{
     imagettftext($image_f, 30, 0, 266, 91, $white, $imageFont, $nameuser);
   };
-  imagettftext($image_f, 22, 0, 266, 136, $silver, $imageFont, '# '.$hrefuser);
+  if ($nameuser != $hrefuser){
+    imagettftext($image_f, 22, 0, 266, 136, $silver, $imageFont, '# '.$hrefuser);
+  }
   imagettftext($image_f, 26, 0, 266, 196, $gold, $imageFont, 'МЕСТО № '.$rankuser);
   $barbox =  procexp($expuser, $max_expuser);
   if ($barbox < 9) {
