@@ -147,7 +147,7 @@ $discord->on('ready', function (Discord $discord) {
                 $countcity = "**{$countcity}** город";
               };
               $timeserver = gmdate("H:i", $timeserver);
-              $map = "{$maps} ({$mapscount}/3)";
+              $map = "{$maps} ({$mapscount}/3)";                                     
               $timezbd = gmdate("H:i:s", $timezbds);
               if ($timezbds == '0' OR $maps == '0'){
                 $map = '[Брифинг]';
@@ -399,6 +399,7 @@ $discord->on('ready', function (Discord $discord) {
       $helpdopmod = Option::new('5️⃣ Допуска и техника', 'helpdopmod');
       $helpadm = Option::new('6️⃣ Команды для админов', 'helpadm');
       $helpkadet = Option::new('7️⃣ Кадетский корпус', 'helpkadet');
+      $helpmesds = Option::new('8️⃣ Ссылка на сообщение Discord', 'helpmesds');
       $selectmenu->addOption($helpupexp);
       $selectmenu->addOption($helpeterm);
       $selectmenu->addOption($helpconnect);
@@ -406,6 +407,7 @@ $discord->on('ready', function (Discord $discord) {
       $selectmenu->addOption($helpdopmod);
       $selectmenu->addOption($helpadm);
       $selectmenu->addOption($helpkadet);
+      $selectmenu->addOption($helpmesds);
       $iformmenu->addComponent($selectmenu);
       $interaction->respondWithMessage($iformmenu, true);
 
@@ -430,6 +432,9 @@ $discord->on('ready', function (Discord $discord) {
         }
         if ($options[0]->getValue() == 'helpkadet') {
           $interaction->respondWithMessage(MessageBuilder::new()->setContent("**```Кадетский корпус```** Одна из мер поддержки новых игроков в прокачке на нашем проекте.\nВступить можно только на званиях рядовой и ефрейтор, выше нельзя.\nКадетский корпус выдаётся инструктором КМБ бойцам которые как-то __проявили себя__ героически в збд **(неоднократно)** и желательно чтоб инструктор был личным свидетелем сего подвига.\nНа время прохождения кадетского корпуса выдаётся буст к получаемому опыту +30% (к штрафам за убийства своих и гражданских тоже).\nПосле прохождения кадетского корпуса выдаётся постоянный буст к опыту +10%.\nВылететь из кадетского корпуса **очень легко**, можно просто убить несколько своих сокомандников или же гражданских или же нарушить какое-либо правило проекта и получить репорт.\nИсключение из кадетского корпуса - фактически крест на кадетке, после исключения вступить обратно довольно проблематично, а в некоторых случаях и вовсе не представляется возможным."), true);
+        }
+        if ($options[0]->getValue() == 'helpmesds') {
+          $interaction->respondWithMessage(MessageBuilder::new()->setContent("**```Помощь отправки ссылки на сообщение в дискорж```** Заходите в нужный канал (допустим это будет <#951372264841052182>) - https://cdn.discordapp.com/attachments/1049567414842572881/1124234430400180244/image.png \nТыкаем по нужному сообщению правой кнопкой мыши и выбираем \"Скопировать ссылку на изображение\" - https://cdn.discordapp.com/attachments/1049567414842572881/1124234728686497882/image.png \nВставляем ссылку сообщения в нужный чат - https://cdn.discordapp.com/attachments/1049567414842572881/1124235042965684324/image.png https://cdn.discordapp.com/attachments/1049567414842572881/1124235087588892692/image.png \nОтправляем ссылку на сообщение с нашим текстом - https://cdn.discordapp.com/attachments/1049567414842572881/1124235421925244988/image.png https://cdn.discordapp.com/attachments/1049567414842572881/1124235422172712990/image.png"), true);
         }
       }, $discord);
     };
