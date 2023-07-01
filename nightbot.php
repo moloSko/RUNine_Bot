@@ -2940,8 +2940,20 @@ $discord->on('message', function (Message $message, Discord $discord) use ($rcon
           $builder->addEmbed($palyerset);
           $message->edit($builder);
         }else{
+          while (empty($playerids)) {
+            $playerids = $rcon->getPlayersArray();
+          }
+          foreach ($playerids as $playerid){
+            $playeruser[] = "**{$playerid['0']}** : {$playerid['4']}";
+          }
+          $playerarr = implode("\n", $playeruser);
           $builder = MessageBuilder::new();
-          $builder->setContent('__Не удалось вывести данные, повторите попытку!__');
+          $builder->setContent('');
+          $palyerset = new Embed($discord);
+          $palyerset->setColor('#00B8A9');
+          $palyerset->setTimestamp();
+          $palyerset->setDescription("**```Список игроков и их ID на сервере```**\n{$playerarr}");
+          $builder->addEmbed($palyerset);
           $message->edit($builder);
         };
       });
